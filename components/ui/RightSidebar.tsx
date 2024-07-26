@@ -37,7 +37,6 @@ const RightSidebar = ({ user, transactions, banks }) => {
                 key={banks[0].$id}
                 account={banks[0]}
                 userName={`${user.firstName} ${user.lastName}`}
-                showBalande={false}
               />
             </div>
             {banks[1] && (
@@ -46,7 +45,6 @@ const RightSidebar = ({ user, transactions, banks }) => {
                   key={banks[1].$id}
                   account={banks[1]}
                   userName={`${user.firstName} ${user.lastName}`}
-                  showBalande={false}
                 />
               </div>
             )}
