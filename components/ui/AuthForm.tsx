@@ -13,12 +13,13 @@ import FormFieldComponent from "./FormFieldComponent";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { signUp, signIn } from "@/lib/actions/user.actions";
+import { signUp, signIn, getLoggedInUser } from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  // const loggedInUser = await getLoggedInUser();
 
   const formSchema = authFormSchema(type);
 
@@ -34,7 +35,19 @@ const AuthForm = ({ type }: { type: string }) => {
     setIsLoading(true);
     try {
       if (type === "sign-up") {
-        const newUser = await signUp(data);
+        const userData = {
+          firstName: data.firstName!,
+          lastName: data.lastName!,
+          address1: data.address1!,
+          city: data.city!,
+          state: data.state!,
+          postalCode: data.postalCode!,
+          dateOfBirth: data.dateOfBirth!,
+          ssn: data.ssn!,
+          email: data.email,
+          password: data.password,
+        };
+        const newUser = await signUp(userData);
         setUser(newUser);
       }
       if (type === "sign-in") {
@@ -130,7 +143,7 @@ const AuthForm = ({ type }: { type: string }) => {
                   <div className="flex gap-4">
                     <FormFieldComponent
                       control={form.control}
-                      name="dob"
+                      name="dateOfBirth"
                       label="Date of Birth"
                       placeholder="YYYY-MM-DD"
                     />
