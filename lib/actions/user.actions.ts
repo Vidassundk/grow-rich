@@ -28,7 +28,7 @@ export const getUserInfo = async ({ userId }: getUserInfoProps) => {
     const user = await database.listDocuments(
       DATABASE_ID!,
       USER_COLLECTION_ID!,
-      [Query.equal("userId", [userId])]
+      [Query.equal("userID", [userId])]
     );
 
     return parseStringify(user.documents[0]);
@@ -38,6 +38,9 @@ export const getUserInfo = async ({ userId }: getUserInfoProps) => {
 };
 
 export const signIn = async ({ email, password }: signInProps) => {
+  console.log(
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+  );
   try {
     const { account } = await createAdminClient();
     const session = await account.createEmailPasswordSession(email, password);
@@ -88,7 +91,7 @@ export const signUp = async ({ password, ...userData }: SignUpParams) => {
       ID.unique(),
       {
         ...userData,
-        userID: newUserAccount.$id,
+        userId: newUserAccount.$id,
         dwollaCustomerId,
         dwollaCustomerUrl,
       }
@@ -161,7 +164,7 @@ export const createBankAccount = async ({
   accountId,
   accessToken,
   fundingSourceUrl,
-  sharableId,
+  shareableId,
 }: createBankAccountProps) => {
   try {
     const { database } = await createAdminClient();
@@ -176,7 +179,7 @@ export const createBankAccount = async ({
         accountId,
         accessToken,
         fundingSourceUrl,
-        sharableId,
+        shareableId,
       }
     );
 
@@ -235,7 +238,7 @@ export const exchangePublicToken = async ({
       accountId: accountData.account_id,
       accessToken,
       fundingSourceUrl,
-      sharableId: encryptId(accountData.account_id),
+      shareableId: encryptId(accountData.account_id),
     });
 
     // Revalidate the path to reflect the changes

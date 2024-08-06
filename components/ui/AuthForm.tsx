@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-
 import FormFieldComponent from "./FormFieldComponent";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
@@ -23,6 +22,7 @@ const AuthForm = ({ type }: { type: string }) => {
 
   const formSchema = authFormSchema(type);
 
+  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,9 +31,13 @@ const AuthForm = ({ type }: { type: string }) => {
     },
   });
 
+  // 2. Define a submit handler.
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+
     try {
+      // Sign up with Appwrite & create plaid token
+
       if (type === "sign-up") {
         const userData = {
           firstName: data.firstName!,
@@ -47,21 +51,22 @@ const AuthForm = ({ type }: { type: string }) => {
           email: data.email,
           password: data.password,
         };
+
         const newUser = await signUp(userData);
+
         setUser(newUser);
       }
+
       if (type === "sign-in") {
         const response = await signIn({
           email: data.email,
           password: data.password,
         });
+
         if (response) router.push("/");
       }
     } catch (error) {
-      console.error(
-        "Embedded Errors:",
-        JSON.stringify(error.body._embedded.errors, null, 2)
-      );
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -81,6 +86,7 @@ const AuthForm = ({ type }: { type: string }) => {
             Horizon
           </h1>
         </Link>
+
         <div className="flex flex-col gap-1 md:gap-3">
           <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
             {user ? "Link Account" : type === "sign-in" ? "Sign In" : "Sign Up"}
@@ -158,12 +164,14 @@ const AuthForm = ({ type }: { type: string }) => {
                   </div>
                 </>
               )}
+
               <FormFieldComponent
                 control={form.control}
                 name="email"
                 label="Email"
                 placeholder="Enter your email"
               />
+
               <FormFieldComponent
                 control={form.control}
                 name="password"
@@ -187,6 +195,7 @@ const AuthForm = ({ type }: { type: string }) => {
               </div>
             </form>
           </Form>
+
           <footer className="flex justify-center gap-1">
             <p className="text-14 font-normal text-gray-600">
               {type === "sign-in"
