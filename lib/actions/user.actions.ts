@@ -28,7 +28,7 @@ export const getUserInfo = async ({ userId }: getUserInfoProps) => {
     const user = await database.listDocuments(
       DATABASE_ID!,
       USER_COLLECTION_ID!,
-      [Query.equal("userID", [userId])]
+      [Query.equal("userId", [userId])]
     );
 
     return parseStringify(user.documents[0]);
@@ -304,3 +304,4 @@ export const getBankByAccountId = async ({
     console.log(error);
   }
 };
+// 438
